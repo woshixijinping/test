@@ -65,8 +65,8 @@ getAccounts()
 class server(threading.Thread):
 	def run(self):
 		sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		sock.bind((socket.gethostbyname(socket.gethostname()),2900))
-		sock.listen(100)
+		sock.bind((socket.gethostbyname(socket.gethostname()),80))
+		sock.listen(10)
 		while True:
 			connection,address=sock.accept()
 			try:
@@ -126,9 +126,11 @@ def register(request):
 	return redirect("/")
 
 def cashier(request):
+	"""
 	ip=getIP(request)
 	if ipToPosition[ip]!="cashier":
 		return HttpResponse("Please log in!")
+	"""
 	tmp=[]
 	for i,o in enumerate(orders):
 		if o["status"]!="not paid":
@@ -144,9 +146,11 @@ def check(request,idx):
 	return redirect("/cashier/")
 
 def chef(request):
+	"""
 	ip=getIP(request)
 	if ipToPosition[ip]!="chef":
 		return HttpResponse("Please log in!")
+	"""
 	tmp=[]
 	for i,o in enumerate(orders):
 		if o["status"]!="not cooked":
@@ -162,9 +166,11 @@ def cook(request,idx):
 	return redirect("/chef/")
 
 def deliverer(request):
+	"""
 	ip=getIP(request)
 	if ipToPosition[ip]!="deliverer":
 		return HttpResponse("Please log in!")
+	"""
 	tmp=[]
 	for i,o in enumerate(orders):
 		if o["status"]!="not delivered":
