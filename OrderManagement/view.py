@@ -126,8 +126,8 @@ def register(request):
 	return redirect("/")
 
 def cashier(request):
-	"""
 	ip=getIP(request)
+	"""
 	if ipToPosition[ip]!="cashier":
 		return HttpResponse("Please log in!")
 	"""
@@ -146,8 +146,8 @@ def check(request,idx):
 	return redirect("/cashier/")
 
 def chef(request):
-	"""
 	ip=getIP(request)
+	"""
 	if ipToPosition[ip]!="chef":
 		return HttpResponse("Please log in!")
 	"""
@@ -166,8 +166,8 @@ def cook(request,idx):
 	return redirect("/chef/")
 
 def deliverer(request):
-	"""
 	ip=getIP(request)
+	"""
 	if ipToPosition[ip]!="deliverer":
 		return HttpResponse("Please log in!")
 	"""
