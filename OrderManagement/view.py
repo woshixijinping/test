@@ -15,9 +15,10 @@ import pymysql
 orders=[]
 ipToUserName=collections.defaultdict(str)
 ipToPosition=collections.defaultdict(str)
-path=os.path.dirname(os.path.abspath(__file__))+"/database/"
+db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 prices=collections.defaultdict(float)
 optionPrices=collections.defaultdict(float)
+accounts={}
 
 def getPrice(item,options):
 	p=prices[item.lower()]
@@ -49,6 +50,15 @@ def receive(buf):
 	else:
 		pass
 
+def getAccounts():
+	f=open(db+"user.txt","r")
+	for line in f:
+		u,p,j=line.split()
+		tmp={}
+		tmp["password"],tmp["position"]=p,j
+		accounts[u]=tmp
+getAccounts()
+
 class server(threading.Thread):
 	def run(self):
 		sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -70,12 +80,10 @@ def index(request):
 	return render(request,'logIn.html')
 
 def verifyAccount(username,password):
-	f=open(path+"user.txt","r")
-	for line in f:
-		u,p,j=line.split()
-		if username==u and password==p:
-			return j
-	return ""
+	if username in accounts:
+		return accounts[username]["position"]
+	else:
+		return ""
 
 def getIP(request):
 	x_forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR')
