@@ -69,7 +69,7 @@ def index(request):
 	return render(request,'logIn.html')
 
 def verifyAccount(username,password):
-	f=open(path+"user/user.txt","r")
+	f=open(path+"database/user.txt","r")
 	for line in f:
 		u,p,j=line.split()
 		if username==u and password==p:
