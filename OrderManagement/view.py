@@ -14,6 +14,7 @@ import pymysql
 
 orders=[]
 ipToUserName=collections.defaultdict(str)
+ipToPosition=collections.defaultdict(str)
 db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 prices=collections.defaultdict(float)
 optionPrices=collections.defaultdict(float)
@@ -103,6 +104,7 @@ def logIn(request):
 	else:
 		ip=getIP(request)
 		ipToUserName[ip]=username
+		ipToPosition[ip]=va
 		return redirect("/"+va+"/")
 
 def goRegister(request):
@@ -125,7 +127,7 @@ def register(request):
 
 def cashier(request):
 	ip=getIP(request)
-	if accounts[ipToUserName[ip]]["position"]!="cashier":
+	if ipToPosition[ip]!="cashier":
 		return HttpResponse("Please log in!")
 	tmp=[]
 	for i,o in enumerate(orders):
@@ -143,7 +145,7 @@ def check(request,idx):
 
 def chef(request):
 	ip=getIP(request)
-	if accounts[ipToUserName[ip]]["position"]!="chef":
+	if ipToPosition[ip]!="chef":
 		return HttpResponse("Please log in!")
 	tmp=[]
 	for i,o in enumerate(orders):
@@ -161,7 +163,7 @@ def cook(request,idx):
 
 def deliverer(request):
 	ip=getIP(request)
-	if accounts[ipToUserName[ip]]["position"]!="deliverer":
+	if ipToPosition[ip]!="deliverer":
 		return HttpResponse("Please log in!")
 	tmp=[]
 	for i,o in enumerate(orders):
