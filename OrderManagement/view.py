@@ -77,8 +77,7 @@ def decodeJSON(record):
 
 def getOrders(status):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-	day=datetime.datetime.now().strftime('%Y-%m-%d')
-	f=open(db+"orders/"+day+".txt","r")
+	f=open(db+"orders.txt","r")
 	orders=[]
 	for line in f:
 		o=decodeJSON(line)
