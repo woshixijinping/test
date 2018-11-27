@@ -6,6 +6,7 @@ import random
 import socket
 import threading
 import time
+import os
 import sys
 import collections
 import json
@@ -69,7 +70,7 @@ def index(request):
 	return render(request,'logIn.html')
 
 def verifyAccount(username,password):
-	f=open(path+"database/user.txt","r")
+	f=open(os.path.dirname(__file__)+"/database/user.txt","r")
 	for line in f:
 		u,p,j=line.split()
 		if username==u and password==p:
