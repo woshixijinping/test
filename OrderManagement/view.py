@@ -85,6 +85,18 @@ def getOrders(status):
 			orders.append(o)
 	return orders
 
+def changeStatus(number,status):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"orders.txt",'r')
+	lines=f.readlines()
+	f=open(db+"orders.txt",'w')
+	for line in lines:
+		buf,orderStatus,orderTime,orderNumber=line.split('#')
+		if orderNumber==number:
+			continue		
+		f.write(line)
+	f.write('#'.join([buf,status,orderTime,number]))
+
 def getDetailIp(ipp):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	f=open(db+"ip.txt","r")
@@ -165,8 +177,7 @@ def cashier(request):
 	return render(request,'cashier.html',para)
 
 def check(request,idx):
-	idx=int(idx)
-	orders[idx]["status"]="not cooked"
+	changeStatus(idx,"not cooked")
 	return redirect("/cashier/")
 
 def chef(request):
@@ -178,8 +189,7 @@ def chef(request):
 	return render(request,'chef.html',para)
 
 def cook(request,idx):
-	idx=int(idx)
-	orders[idx]["status"]="not delivered"
+	changeStatus(idx,"not delivered")
 	return redirect("/chef/")
 
 def deliverer(request):
@@ -191,6 +201,5 @@ def deliverer(request):
 	return render(request,'deliverer.html',para)
 
 def deliver(request,idx):
-	idx=int(idx)
-	orders[idx]["status"]="finish"
+	changeStatus(idx,"finish")
 	return redirect("/deliverer/")
