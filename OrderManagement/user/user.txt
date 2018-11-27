@@ -1,0 +1,12 @@
+cashier 123456 cashier
+chef 123456 chef
+deliverer 123456 deliverer
+liyutong 123456 chef
+aaaa 111111 chef
+renchenyang 111111 deliver
+kylechan 123456 chef
+abc abc chef
+ren a chef
+test 111111 cashier
+henru 123 cashier
+qqq 123 cashier

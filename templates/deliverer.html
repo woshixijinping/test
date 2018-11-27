@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<script language="JavaScript">
+	function myrefresh(){window.location.reload();}
+	setTimeout('myrefresh()',5000);
+</script>
+
+<head>
+    <meta charset="utf-8">
+    <title>Order Management</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+    html,
+    body {
+        height: 100%;
+    }
+
+    aside {
+        /*侧边栏,初始位置为-200px，即隐藏效果*/
+        /*position: absolute;
+                top: 0;
+                bottom: 0;
+                left: -200px;*/
+        float: left;
+        /*侧边栏居左，改为right可令侧边栏居右*/
+        width: 200px;
+        background: #9d9d9d;
+        height: 100%;
+        /*动画效果的执行方式是ease-out，即侧边栏滑动效果为渐变式，而不是生硬的突然变化*/
+
+    }
+
+    .noMargin {
+        margin-bottom: 0px;
+    }
+
+    .profile {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 20px;
+        /*color:#FFFFFF;*/
+    }
+
+    .orders {
+        position: absolute;
+        left: 200px;
+    }
+
+    .rcorners3 {
+        border-radius: 25px;
+        border: 2px solid #8AC007;
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .rightth {
+        text-align: right;
+    }
+
+    .leftth {
+        text-align: left;
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse  noMargin" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/deliverer/">OrderManagement</a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>Log out</a></li>
+            </ul>
+        </div>
+    </nav>
+    <aside>
+        <ul id="sideul">
+            <div class="profile"><span class="glyphicon glyphicon-user"></span> {{username}}</div>
+            <div class="profile"> Role: Deliverer</div>
+        </ul>
+    </aside>
+    <div class="orders" id="orders">
+	{% for order in orders %}
+        <div class="panel panel-primary rcorners3">
+            <div class="panel-heading">
+                <h3 class="panel-title">#Order {{order.idx}}</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Status: {{order.status}} <a href="/deliver/{{order.idx}}">deliver</a></th>
+                            <th>Delivery Method: {{order.deliveryMethod}}</th>
+                            <th>Time: {{order.time}}</th>
+                        </tr>
+                        <tr>
+                            <th>Item</th>
+                            <th>Options</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+		    {% for part in order.parts %}
+                        <tr>
+                            <th>{{part.item}}</th>
+                            <th>{{part.option}}</th>
+                            <th>{{part.price}}</th>
+                        </tr>
+		    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+	{% endfor %}   
+        
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<form action="/register/" method="get">
+	username: <input type="text" name="username" required="required"> 
+	<br>
+	password: <input type="password" name="password" required="required"> 
+	<br>
+	confirm password: <input type="password" name="confirm_password" required="required"> 
+	<br>
+	position: <input type="text" list="positions" name="position" required="required"> 
+	<br>
+	<datalist id="positions">
+		{% for p in positions %}
+			<option value={{p}}>
+		{% endfor %}
+		</datalist>
+	<input type="submit" value="register">
+</form>
+
+</body>
+</html>
