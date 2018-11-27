@@ -1,0 +1,7 @@
+Small,-0.15
+X Larger,0.40
+large,0.2
+Animal Style,1.80
+Cheese,1.50
+3x3,1.05
+4x4,2.10

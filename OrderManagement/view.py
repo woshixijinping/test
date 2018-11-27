@@ -60,12 +60,27 @@ def getAccounts():
 	for line in f:
 		u,p,j=line.split()
 		addAccount(u,p,j)
+
+def getPrices():
+	f=open(db+"price.txt","r")
+	for line in f:
+		i,p=line.split(',')
+		prices[i]=float(p)
+
+def getOptionPrices():
+	f=open(db+"option.txt","r")
+	for line in f:
+		o,p=line.split(',')
+		optionPrices[o]=p
+
 getAccounts()
+getPrices()
+getOptionPrices()
 
 class server(threading.Thread):
 	def run(self):
 		sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		sock.bind((socket.gethostbyname(socket.gethostname()),80))
+		sock.bind((socket.gethostbyname(socket.gethostname()),2900))
 		sock.listen(10)
 		while True:
 			connection,address=sock.accept()
