@@ -15,7 +15,7 @@ import pymysql
 orders=[]
 ipToUserName=collections.defaultdict(str)
 ipToPosition=collections.defaultdict(str)
-path=sys.path[0]+"/OrderManagement/"
+path=os.path.dirname(os.path.abspath(__file__))+"/database/"
 prices=collections.defaultdict(float)
 optionPrices=collections.defaultdict(float)
 
@@ -70,7 +70,7 @@ def index(request):
 	return render(request,'logIn.html')
 
 def verifyAccount(username,password):
-	f=open(os.path.dirname(__file__)+"/database/user.txt","r")
+	f=open(path+"user.txt","r")
 	for line in f:
 		u,p,j=line.split()
 		if username==u and password==p:
