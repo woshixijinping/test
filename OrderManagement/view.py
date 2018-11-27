@@ -50,13 +50,16 @@ def receive(buf):
 	else:
 		pass
 
+def addAccount(u,p,j):
+	tmp={}
+	tmp["password"],tmp["position"]=p,j
+ 	accounts[u]=tmp
+
 def getAccounts():
 	f=open(db+"user.txt","r")
 	for line in f:
 		u,p,j=line.split()
-		tmp={}
-		tmp["password"],tmp["position"]=p,j
-		accounts[u]=tmp
+		addAccount(u,p,j)
 getAccounts()
 
 class server(threading.Thread):
@@ -113,15 +116,13 @@ def register(request):
 	password=request.GET['password']
 	confirm_password=request.GET['confirm_password']
 	position=request.GET['position']
-	f=open(path+"user/user.txt",'r')
-	for line in f:
-		u,p,j=line.split()
-		if username==u:
-			return HttpResponse("Existing user name!")
+	if username in accounts:
+		return HttpResponse("Existing user name!")
 	if password!=confirm_password:
 	 	return HttpResponse("Different password!")
-	f=open(path+"user/user.txt",'a')
+	f=open(db+"user.txt",'a')
 	f.write(" ".join([username,password,position])+"\n")
+	addAccount(u,p,j)
 	return redirect("/")
 
 def cashier(request):
