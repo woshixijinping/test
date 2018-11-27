@@ -12,6 +12,7 @@ import collections
 import json
 import pymysql
 
+global orders,ipToUserName,ipToPosition,db,prices,optionPrices,accounts
 orders=[]
 ipToUserName=collections.defaultdict(str)
 ipToPosition=collections.defaultdict(str)
@@ -67,13 +68,13 @@ def getPrices():
 	f=open(db+"price.txt","r")
 	for line in f:
 		i,p=line.split(',')
-		prices[i]=float(p)
+		prices[i.lower()]=float(p)
 
 def getOptionPrices():
 	f=open(db+"option.txt","r")
 	for line in f:
 		o,p=line.split(',')
-		optionPrices[o]=p
+		optionPrices[o.lower()]=p
 
 getAccounts()
 getPrices()
