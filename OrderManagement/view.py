@@ -38,19 +38,16 @@ def getPrice(item,options):
 
 def nextNumber():
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-	day=datetime.datetime.now().strftime('%Y-%m-%d')
 	try:
-		f=open(db+"orders/"+day+".txt",'r')
+		f=open(db+"orders.txt",'r')
 	except:
-		return 1
+		return 0
 	return len(f.readlines())+1
 
 def receive(buf):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	day=datetime.datetime.now().strftime('%Y-%m-%d')
-	if not os.path.exists(db+"orders/"+day+".txt"):
-		os.mknod(db+"orders/"+day+".txt")
-	f=open(db+"orders/"+day+".txt",'a')
+	f=open(db+"orders.txt",'a')
 	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())]))
 
 def decodeJSON(record):
@@ -81,10 +78,7 @@ def decodeJSON(record):
 def getOrders(status):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	day=datetime.datetime.now().strftime('%Y-%m-%d')
-	try:
-		f=open(db+"orders/"+day+".txt","r")
-	except:
-	 	return {}
+	f=open(db+"orders/"+day+".txt","r")
 	orders=[]
 	for line in f:
 		o=decodeJSON(line)
