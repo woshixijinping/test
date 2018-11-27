@@ -38,11 +38,7 @@ def getPrice(item,options):
 
 def nextNumber():
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-	try:
-		f=open(db+"orders.txt",'r')
-	except:
-		return 0
-	return len(f.readlines())+1
+	return len(f.readlines())
 
 def receive(buf):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
@@ -107,6 +103,10 @@ def getDetailIp(ipp):
 	return ("","")
 
 def getOrder(request,orderdetail):
+	try:
+		json.loads(orderdetail)
+	except:
+		return HttpResponse("Not JSON format!")
 	receive(orderdetail)
 	return HttpResponse(orderdetail)
 
