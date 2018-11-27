@@ -48,7 +48,10 @@ def nextNumber():
 def receive(buf):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	day=datetime.datetime.now().strftime('%Y-%m-%d')
-	f=open(db+"orders/"+day+".txt",'a')
+	try:
+		f=open(db+"orders/"+day+".txt",'a')
+	except:
+		f=open(db+"orders/"+day+".txt",'w')
 	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())]))
 
 def decodeJSON(record):
