@@ -122,7 +122,7 @@ def register(request):
 	 	return HttpResponse("Different password!")
 	f=open(db+"user.txt",'a')
 	f.write(" ".join([username,password,position])+"\n")
-	addAccount(u,p,j)
+	addAccount(username,password,position)
 	return redirect("/")
 
 def cashier(request):
