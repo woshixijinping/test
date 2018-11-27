@@ -123,8 +123,7 @@ def logIn(request):
 		return redirect("/"+va+"/")
 
 def goRegister(request):
-	para={"positions":["chef","cashier","deliverer",socket.gethostbyname(socket.gethostname()),socket.gethostname()]}
-	return render(request,'register.html',para)
+	return render(request,'register.html')
 
 def register(request):
 	username=request.GET['username']
@@ -172,7 +171,7 @@ def chef(request):
 			pass
 		else:
 			tmp.append(o)
-	para={'username':ipToUserName[ip],'orders':tmp}
+	para={'username':ipToUserName[ip]+"|"+socket.gethostbyname(socket.gethostname())+"|"+socket.gethostname(),'orders':tmp}
 	return render(request,'chef.html',para)
 
 def cook(request,idx):
