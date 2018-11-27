@@ -66,7 +66,7 @@ s=server()
 s.start()
 
 def index(request):
-	return render(request,'login.html')
+	return render(request,'logIn.html')
 
 def verifyAccount(username,password):
 	f=open(path+"user/user.txt","r")
