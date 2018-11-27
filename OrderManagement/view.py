@@ -123,7 +123,7 @@ def logIn(request):
 		return redirect("/"+va+"/")
 
 def goRegister(request):
-	para={"positions":["chef","cashier","deliverer"]}
+	para={"positions":["chef","cashier","deliverer",socket.gethostbyname(socket.gethostname()),socket.gethostname()]}
 	return render(request,'register.html',para)
 
 def register(request):
