@@ -29,5 +29,5 @@ urlpatterns = [
     url(r'^cook/(?P<idx>[0-9]*)$',view.cook),
     url(r'^deliverer/$',view.deliverer),
     url(r'^deliver/(?P<idx>[0-9]*)$',view.deliver),
-    url(r'^getOrder/(?P<orderdetail>[0-9a-z]*)$',view.getOrder),
+    url(r'^getOrder/(?P<orderdetail>(.*?))$',view.getOrder),
 ]
