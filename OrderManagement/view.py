@@ -10,33 +10,58 @@ import os
 import sys
 import collections
 import json
-import pymysql
+import datetime
 
-global orders,ipToUserName,ipToPosition,db,prices,optionPrices,accounts
-orders=[]
-ipToUserName=collections.defaultdict(str)
-ipToPosition=collections.defaultdict(str)
-db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-prices=collections.defaultdict(float)
-optionPrices=collections.defaultdict(float)
-accounts={}
+def getItemPrice(item):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"price.txt","r")
+	for line in f:
+		i,p=line.split(',')
+		if item.lower()==i.lower():
+			return float(p)
+	return 0
+
+def getOptionPrice(option):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"option.txt","r")
+	for line in f:
+		o,p=line.split(',')
+		if option.lower()==o.lower():
+			return float(p)
+	return 0
 
 def getPrice(item,options):
-	p=prices[item.lower()]
+	p=getItemPrice(item)
 	for o in options.split(','):
-		p+=optionPrices[o.lower()]
+		p+=getOptionPrice(o)
 	return p
 
+def nextNumber():
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	day=datetime.datetime.now().strftime('%Y-%m-%d')
+	try:
+		f=open(db+"orders/"+day+".txt",'r')
+	except:
+		return 1
+	return len(f.readlines())+1
+
 def receive(buf):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	day=datetime.datetime.now().strftime('%Y-%m-%d')
+	f=open(db+"orders/"+day+".txt",'a')
+	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())]))
+
+def decodeJSON(record):
+	buf,orderStatus,orderTime,orderNumber=record.split('#')
 	js=json.loads(buf)
 	if "intent" not in js:
-		return
+		return ""
 	if js["intent"]=="OrderFood":
 		order={}
-		order["idx"]=len(orders)
-		order["status"]="not paid"
+		order["idx"]=orderNumber
+		order["status"]=orderStatus
 		order["deliveryMethod"]="For here"
-		order["time"]=time.strftime('%Y.%m.%d %H:%M:%S',time.localtime(time.time()))
+		order["time"]=orderTime
 		parts=[]
 		for item in js["items"]:
 			part={}
@@ -47,57 +72,32 @@ def receive(buf):
 			for _ in range(item["amount"]):
 				parts.append(part)
 		order["parts"]=parts
-		orders.append(order)
-	elif js["intent"]=="QueryOptions":
-		pass
+		return order
 	else:
-		pass
+		return ""
 
-def addAccount(u,p,j):
-	tmp={}
-	tmp["password"],tmp["position"]=p,j
- 	accounts[u]=tmp
-
-def getAccounts():
-	f=open(db+"user.txt","r")
+def getOrders(status):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	day=datetime.datetime.now().strftime('%Y-%m-%d')
+	try:
+		f=open(db+"orders/"+day+".txt","r")
+	except:
+	 	return {}
+	orders=[]
 	for line in f:
-		u,p,j=line.split()
-		addAccount(u,p,j)
+		o=decodeJSON(line)
+		if o and o["status"]==status:
+			orders.append(o)
+	return orders
 
-def getPrices():
-	f=open(db+"price.txt","r")
+def getDetailIp(ipp):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"ip.txt","r")
 	for line in f:
-		i,p=line.split(',')
-		prices[i.lower()]=float(p)
-
-def getOptionPrices():
-	f=open(db+"option.txt","r")
-	for line in f:
-		o,p=line.split(',')
-		optionPrices[o.lower()]=p
-
-getAccounts()
-getPrices()
-getOptionPrices()
-
-"""
-class server(threading.Thread):
-	def run(self):
-		sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-		sock.bind((socket.gethostbyname(socket.gethostname()),2900))
-		sock.listen(10)
-		while True:
-			connection,address=sock.accept()
-			try:
-				while True:
-					buf=connection.recv(1024)
-					receive(buf)
-			except socket.timeout:
-			  	print 'time out'
-			connection.close()
-s=server()
-s.start()
-"""
+		ip,username,position=line.split()
+		if ip==ipp:
+			return (username,position)
+	return ("","")
 
 def getOrder(request,orderdetail):
 	receive(orderdetail)
@@ -107,10 +107,13 @@ def index(request):
 	return render(request,'logIn.html')
 
 def verifyAccount(username,password):
-	if username in accounts:
-		return accounts[username]["position"]
-	else:
-		return ""
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"user.txt",'r')
+	for line in f:
+		u,p,j=line.split()
+		if u==username and p==password:
+			return j
+	return ""
 
 def getIP(request):
 	x_forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR')
@@ -127,8 +130,15 @@ def logIn(request):
 		return render(request,'logIn.html')
 	else:
 		ip=getIP(request)
-		ipToUserName[ip]=username
-		ipToPosition[ip]=va
+		db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+		f=open(db+"ip.txt",'r')
+		lines=f.readlines()
+		f=open(db+"ip.txt",'w')
+		for line in lines:
+			if ip in line:
+				continue
+			f.write(line)
+		f.write(" ".join([ip,username,va])+"\n")
 		return redirect("/"+va+"/")
 
 def goRegister(request):
@@ -139,28 +149,24 @@ def register(request):
 	password=request.GET['password']
 	confirm_password=request.GET['confirm_password']
 	position=request.GET['position']
-	if username in accounts:
-		return HttpResponse("Existing user name!")
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"user.txt",'r')
+	for line in f:
+		u,p,j=line.split()
+		if username==u:
+			return HttpResponse("Existing user name!")
 	if password!=confirm_password:
 	 	return HttpResponse("Different password!")
 	f=open(db+"user.txt",'a')
 	f.write(" ".join([username,password,position])+"\n")
-	addAccount(username,password,position)
 	return redirect("/")
 
 def cashier(request):
 	ip=getIP(request)
-	"""
-	if ipToPosition[ip]!="cashier":
-		return HttpResponse("Please log in!")
-	"""
-	tmp=[]
-	for i,o in enumerate(orders):
-		if o["status"]!="not paid":
-			pass
-		else:
-			tmp.append(o)
-	para={'username':ipToUserName[ip],'orders':tmp}
+	username,position=getDetailIp(ip)
+	if position!="cashier":
+                return HttpResponse("Please log in!")
+	para={'username':username,'orders':getOrders("not paid")}
 	return render(request,'cashier.html',para)
 
 def check(request,idx):
@@ -170,17 +176,10 @@ def check(request,idx):
 
 def chef(request):
 	ip=getIP(request)
-	"""
-	if ipToPosition[ip]!="chef":
-		return HttpResponse("Please log in!")
-	"""
-	tmp=[]
-	for i,o in enumerate(orders):
-		if o["status"]!="not cooked":
-			pass
-		else:
-			tmp.append(o)
-	para={'username':ipToUserName[ip],'orders':tmp}
+	username,position=getDetailIp(ip)
+	if position!="chef":
+                 return HttpResponse("Please log in!")
+	para={'username':username,'orders':getOrders("not cooked")}
 	return render(request,'chef.html',para)
 
 def cook(request,idx):
@@ -190,17 +189,10 @@ def cook(request,idx):
 
 def deliverer(request):
 	ip=getIP(request)
-	"""
-	if ipToPosition[ip]!="deliverer":
+	username,position=getDetailIp(ip)
+	if position!="deliverer":
 		return HttpResponse("Please log in!")
-	"""
-	tmp=[]
-	for i,o in enumerate(orders):
-		if o["status"]!="not delivered":
-			pass
-		else:
-			tmp.append(o)
-	para={'username':ipToUserName[ip],'orders':tmp}
+	para={'username':username,'orders':getOrders("not delivered")}
 	return render(request,'deliverer.html',para)
 
 def deliver(request,idx):
