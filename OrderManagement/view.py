@@ -77,6 +77,7 @@ getAccounts()
 getPrices()
 getOptionPrices()
 
+"""
 class server(threading.Thread):
 	def run(self):
 		sock=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -93,6 +94,7 @@ class server(threading.Thread):
 			connection.close()
 s=server()
 s.start()
+"""
 
 def index(request):
 	return render(request,'logIn.html')
