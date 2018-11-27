@@ -171,7 +171,7 @@ def chef(request):
 			pass
 		else:
 			tmp.append(o)
-	para={'username':ipToUserName[ip]+"|"+socket.gethostbyname(socket.gethostname())+"|"+socket.gethostname(),'orders':tmp}
+	para={'username':ipToUserName[ip],'orders':tmp}
 	return render(request,'chef.html',para)
 
 def cook(request,idx):
