@@ -28,7 +28,9 @@ def getPrice(item,options):
 
 def receive(buf):
 	js=json.loads(buf)
-	if js['intent']=="OrderFood":
+	if "intent" not in js:
+		return
+	if js["intent"]=="OrderFood":
 		order={}
 		order["idx"]=len(orders)
 		order["status"]="not paid"
@@ -45,7 +47,7 @@ def receive(buf):
 				parts.append(part)
 		order["parts"]=parts
 		orders.append(order)
-	elif js['intent']=="QueryOptions":
+	elif js["intent"]=="QueryOptions":
 		pass
 	else:
 		pass
@@ -95,6 +97,10 @@ class server(threading.Thread):
 s=server()
 s.start()
 """
+
+def getOrder(request,orderdetail):
+	receive(orderdetail)
+	return HttpResponse(orderdetail)
 
 def index(request):
 	return render(request,'logIn.html')
