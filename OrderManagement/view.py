@@ -44,6 +44,15 @@ def nextNumber():
 def receive(buf):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	f=open(db+"orders.txt",'a')
+	try:
+		js=json.loads(buf)
+		if "intent" not in js or "delivery method" not in js or "items" not in js:
+			return
+		for item in js["items"]:
+		 	if "name" not in item or "options" not in item or "amount" not in item:
+		 		return
+	except:
+		return
 	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())])+"\n")
 
 def decodeJSON(record):

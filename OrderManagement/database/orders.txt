@@ -1,0 +1,1 @@
+{"items": [{"amount": 2, "name": "cheeseburger", "options": ["no onion", "animal style"]}, {"amount": 1, "name": "french fries", "options": []}], "intent": "OrderFood", "delivery method": "for here"}#not paid#2018.11.28 05:23:03#0
