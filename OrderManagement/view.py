@@ -91,7 +91,7 @@ def changeStatus(number,status):
 		if orderNumber==number:
 			continue		
 		f.write(line)
-	f.write('#'.join([buf,status,orderTime,number]))
+	f.write('#'.join([buf,status,orderTime,number])+"\n")
 
 def getDetailIp(ipp):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
