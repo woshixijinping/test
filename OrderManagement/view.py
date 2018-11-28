@@ -87,10 +87,10 @@ def changeStatus(number,status):
 	lines=f.readlines()
 	f=open(db+"orders.txt",'w')
 	for line in lines:
-		buf,orderStatus,orderTime,orderNumber=line.split('#')
-		if orderNumber==number:
-			continue		
-		f.write(line)
+		buf,orderStatus,orderTime,orderNumber=line.strip('\n').split('#')
+		print orderNumber,number
+		if orderNumber!=number:	
+			f.write(line)
 	f.write('#'.join([buf,status,orderTime,number])+"\n")
 
 def getDetailIp(ipp):
