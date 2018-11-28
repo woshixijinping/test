@@ -1,3 +1,0 @@
-cashier 123456 cashier
-chef 123456 chef
-deliverer 123456 deliverer
