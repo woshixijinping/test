@@ -43,7 +43,6 @@ def nextNumber():
 
 def receive(buf):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-	day=datetime.datetime.now().strftime('%Y-%m-%d')
 	f=open(db+"orders.txt",'a')
 	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())]))
 
