@@ -38,6 +38,7 @@ def getPrice(item,options):
 
 def nextNumber():
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"orders.txt",'r')
 	return len(f.readlines())
 
 def receive(buf):
