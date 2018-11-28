@@ -44,7 +44,7 @@ def nextNumber():
 def receive(buf):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	f=open(db+"orders.txt",'a')
-	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())]))
+	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())])+"\n")
 
 def decodeJSON(record):
 	buf,orderStatus,orderTime,orderNumber=record.split('#')
