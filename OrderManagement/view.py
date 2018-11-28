@@ -55,7 +55,7 @@ def decodeJSON(record):
 		order={}
 		order["idx"]=orderNumber
 		order["status"]=orderStatus
-		order["deliveryMethod"]="For here"
+		order["deliveryMethod"]=js["delivery method"]
 		order["time"]=orderTime
 		parts=[]
 		for item in js["items"]:
