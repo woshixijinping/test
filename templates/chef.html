@@ -70,7 +70,7 @@
     <nav class="navbar navbar-inverse  noMargin" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/cashier/">OrderManagement</a>
+                <a class="navbar-brand" href="/chef/">OrderManagement</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>Log out</a></li>
@@ -84,6 +84,10 @@
         </ul>
     </aside>
     <div class="orders" id="orders">
+    	<form method="get" action="/search/chef" name="main">
+		<input type="text" name="search"><input type="submit" value="Search">
+	</form>
+	{{searchMessage}}<br>
 	{% for order in orders %}
         <div class="panel panel-primary rcorners3">
             <div class="panel-heading">

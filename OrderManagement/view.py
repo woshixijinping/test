@@ -86,14 +86,25 @@ def decodeJSON(record):
 	except:
 		return ""
 
-def getOrders(status):
+def getSearch(ip):
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-	f=open(db+"orders.txt","r")
+	f=open(db+"search.txt",'r')
+	for line in f:
+		ipp,s=line.split()
+		if ip==ipp:
+			return s
+	return ""
+
+def getOrders(status,ip):
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	s=getSearch(ip)
+	f=open(db+"orders.txt",'r')
 	orders=[]
 	for line in f:
-		o=decodeJSON(line)
-		if o and o["status"]==status:
-			orders.append(o)
+	 	if not s or s in line:
+			o=decodeJSON(line)
+			if o and o["status"]==status:
+				orders.append(o)
 	return orders
 
 def changeStatus(number,status):
@@ -186,9 +197,14 @@ def register(request):
 def cashier(request):
 	ip=getIP(request)
 	username,position=getDetailIp(ip)
+	s=getSearch(ip)
 	if position!="cashier":
                 return HttpResponse("Please log in!")
-	para={'username':username,'orders':getOrders("not paid")}
+	if s:
+		sm="Searching '"+getSearch(ip)+"'"
+	else:
+	 	sm=""
+	para={'username':username,'orders':getOrders("not paid",ip),"searchMessage":sm}
 	return render(request,'cashier.html',para)
 
 def check(request,idx):
@@ -200,7 +216,12 @@ def chef(request):
 	username,position=getDetailIp(ip)
 	if position!="chef":
                  return HttpResponse("Please log in!")
-	para={'username':username,'orders':getOrders("not cooked")}
+	s=getSearch(ip)
+	if s:
+		sm="Searching '"+getSearch(ip)+"'"
+	else:
+	 	sm=""
+	para={'username':username,'orders':getOrders("not cooked",ip),"searchMessage":sm}
 	return render(request,'chef.html',para)
 
 def cook(request,idx):
@@ -212,9 +233,45 @@ def deliverer(request):
 	username,position=getDetailIp(ip)
 	if position!="deliverer":
 		return HttpResponse("Please log in!")
-	para={'username':username,'orders':getOrders("not delivered")}
+	s=getSearch(ip)
+	if position!="cashier":
+                return HttpResponse("Please log in!")
+	if s:
+		sm="Searching '"+getSearch(ip)+"'"
+	para={'username':username,'orders':getOrders("not delivered",ip),"searchMessage":sm}
 	return render(request,'deliverer.html',para)
 
 def deliver(request,idx):
 	changeStatus(idx,"finish")
 	return redirect("/deliverer/")
+
+def search(request,position):
+	newSearch=request.GET["search"]
+	if not newSearch:
+		return redirect("/"+position+"/")
+	ip=getIP(request)
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"search.txt",'r')
+	lines=f.readlines()
+	f=open(db+"search.txt",'w')
+	for line in lines:
+		ipp,s=line.split()
+		if ip==ipp:
+			continue
+		f.write(line)
+	f.write(" ".join([ip,newSearch])+"\n")
+	return redirect("/"+position+"/")
+
+def reset(request,position):
+	newSearch=request.GET["search"]
+	ip=getIP(request)
+	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
+	f=open(db+"search.txt",'r')
+	lines=f.readlines()
+	f=open(db+"search.txt",'w')
+	for line in lines:
+		ipp,s=line.split()
+		if ip==ipp:
+			continue
+		f.write(line)
+	return redirect("/"+position+"/")

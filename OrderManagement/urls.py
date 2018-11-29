@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^deliverer/$',view.deliverer),
     url(r'^deliver/(?P<idx>[0-9]*)$',view.deliver),
     url(r'^getOrder/(?P<orderdetail>(.*?))$',view.getOrder),
+    url(r'^search/(?P<position>(.*?))$',view.search),
+    url(r'^reset/(?P<position>(.*?))$',view.reset),
 ]

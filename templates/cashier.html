@@ -84,6 +84,10 @@
         </ul>
     </aside>
     <div class="orders" id="orders">
+    	<form method="get" action="/search/cashier" name="main">
+		<input type="text" name="search"><input type="submit" value="Search">
+	</form>
+	{{searchMessage}}<br>
 	{% for order in orders %}
         <div class="panel panel-primary rcorners3">
             <div class="panel-heading">
