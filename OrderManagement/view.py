@@ -32,7 +32,7 @@ def getOptionPrice(option):
 
 def getPrice(item,options):
 	p=getItemPrice(item)
-	for o in options.split(','):
+	for o in options.split(', '):
 		p+=getOptionPrice(o)
 	return p
 
