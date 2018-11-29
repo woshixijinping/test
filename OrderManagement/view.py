@@ -72,7 +72,7 @@ def decodeJSON(record):
 			for item in js["items"]:
 				part={}
 				part["item"]=item["name"]
-				part["option"]=",".join(item["options"])
+				part["option"]=", ".join(item["options"])
 				part["count"]=item["amount"]
 				part["price"]=getPrice(part["item"],part["option"])
 				parts.append(part)
