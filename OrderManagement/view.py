@@ -247,8 +247,6 @@ def deliver(request,idx):
 
 def search(request,position):
 	newSearch=request.GET["search"]
-	if not newSearch:
-		return redirect("/"+position+"/")
 	ip=getIP(request)
 	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
 	f=open(db+"search.txt",'r')
@@ -259,19 +257,6 @@ def search(request,position):
 		if ip==ipp:
 			continue
 		f.write(line)
-	f.write(" ".join([ip,newSearch])+"\n")
-	return redirect("/"+position+"/")
-
-def reset(request,position):
-	newSearch=request.GET["search"]
-	ip=getIP(request)
-	db=os.path.dirname(os.path.abspath(__file__))+"/database/"
-	f=open(db+"search.txt",'r')
-	lines=f.readlines()
-	f=open(db+"search.txt",'w')
-	for line in lines:
-		ipp,s=line.split()
-		if ip==ipp:
-			continue
-		f.write(line)
+	if newSearch:
+		f.write(" ".join([ip,newSearch])+"\n")
 	return redirect("/"+position+"/")
