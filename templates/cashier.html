@@ -3,7 +3,7 @@
 
 <script language="JavaScript">
 	function myrefresh(){window.location.reload();}
-	setTimeout('myrefresh()',3000);
+	setTimeout('myrefresh()',5000);
 </script>
 
 <head>
@@ -87,7 +87,7 @@
 	{% for order in orders %}
         <div class="panel panel-primary rcorners3">
             <div class="panel-heading">
-                <h3 class="panel-title">#Order {{order.idx}}</h3>
+                <h3 class="panel-title">Order #{{order.idx}}</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-striped">
@@ -96,11 +96,13 @@
                             <th>Status: {{order.status}} <a href="/check/{{order.idx}}">check</a></th>
                             <th>Delivery Method: {{order.deliveryMethod}}</th>
                             <th>Time: {{order.time}}</th>
+			    <th>Total Price: {{order.totalPrice}}+{{order.tax}}={{order.total}}</th>
                         </tr>
                         <tr>
                             <th>Item</th>
                             <th>Options</th>
                             <th>Price</th>
+			    <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,6 +111,7 @@
                             <th>{{part.item}}</th>
                             <th>{{part.option}}</th>
                             <th>{{part.price}}</th>
+			    <th>{{part.count}}</th>
                         </tr>
 		    {% endfor %}
                     </tbody>

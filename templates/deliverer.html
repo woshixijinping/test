@@ -70,7 +70,7 @@
     <nav class="navbar navbar-inverse  noMargin" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/deliverer/">OrderManagement</a>
+                <a class="navbar-brand" href="/cashier/">OrderManagement</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/"><span class="glyphicon glyphicon-log-out"></span>Log out</a></li>
@@ -87,20 +87,22 @@
 	{% for order in orders %}
         <div class="panel panel-primary rcorners3">
             <div class="panel-heading">
-                <h3 class="panel-title">#Order {{order.idx}}</h3>
+                <h3 class="panel-title">Order #{{order.idx}}</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Status: {{order.status}} <a href="/deliver/{{order.idx}}">deliver</a></th>
+                            <th>Status: {{order.status}} <a href="/check/{{order.idx}}">deliver</a></th>
                             <th>Delivery Method: {{order.deliveryMethod}}</th>
                             <th>Time: {{order.time}}</th>
+			    <th>Total Price: {{order.totalPrice}}+{{order.tax}}={{order.total}}</th>
                         </tr>
                         <tr>
                             <th>Item</th>
                             <th>Options</th>
                             <th>Price</th>
+			    <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,6 +111,7 @@
                             <th>{{part.item}}</th>
                             <th>{{part.option}}</th>
                             <th>{{part.price}}</th>
+			    <th>{{part.count}}</th>
                         </tr>
 		    {% endfor %}
                     </tbody>

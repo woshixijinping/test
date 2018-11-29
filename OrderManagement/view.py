@@ -53,31 +53,37 @@ def receive(buf):
 		 		return
 	except:
 		return
-	f.write('#'.join([buf,"not paid",datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())])+"\n")
+	f.write('#'.join([buf,"not paid",((datetime.datetime.now()-datetime.timedelta(hours=8))).strftime('%Y.%m.%d %H:%M:%S'),str(nextNumber())])+"\n")
 
 def decodeJSON(record):
-	buf,orderStatus,orderTime,orderNumber=record.split('#')
-	js=json.loads(buf)
-	if "intent" not in js:
-		return ""
-	if js["intent"]=="OrderFood":
-		order={}
-		order["idx"]=orderNumber
-		order["status"]=orderStatus
-		order["deliveryMethod"]=js["delivery method"]
-		order["time"]=orderTime
-		parts=[]
-		for item in js["items"]:
-			part={}
-			part["item"]=item["name"]
-			part["option"]=",".join(item["options"])
-			part["count"]=item["amount"]
-			part["price"]=getPrice(part["item"],part["option"])
-			for _ in range(item["amount"]):
+	try:
+		buf,orderStatus,orderTime,orderNumber=record.split('#')
+		js=json.loads(buf)
+		if "intent" not in js:
+			return ""
+		if js["intent"]=="OrderFood":
+			order={}
+			order["idx"]=orderNumber
+			order["status"]=orderStatus
+			order["deliveryMethod"]=js["delivery method"]
+			order["time"]=orderTime
+			order["totalPrice"]=0
+			parts=[]
+			for item in js["items"]:
+				part={}
+				part["item"]=item["name"]
+				part["option"]=",".join(item["options"])
+				part["count"]=item["amount"]
+				part["price"]=getPrice(part["item"],part["option"])
 				parts.append(part)
-		order["parts"]=parts
-		return order
-	else:
+				order["totalPrice"]+=part["count"]*part["price"]
+			order["parts"]=parts
+			order["tax"]=round(order["totalPrice"]*0.0775,2)
+			order["total"]=order["totalPrice"]+order["tax"]
+			return order
+		else:
+			return ""
+	except:
 		return ""
 
 def getOrders(status):

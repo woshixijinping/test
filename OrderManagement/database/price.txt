@@ -1,15 +1,14 @@
-Cheeseburger,2.50
-Coffee,1.35
-Coke,1.65
-Double-double Burger,3.60
-Double-double Combo,6.90
-Dr Pepper,1.65
-French Fries,1.65
-Hamburger,2.2
-Hamburger Combo,5.50
-Iced Tea,1.65
-Lemonade,1.65
-Milk,0.9
-Root Beer,1.65
-Seven-up,1.65
-Shake,2.25
+cheeseburger,2.70
+coffee,1.25
+cocoa,1.60
+coke,1.60
+double-double,3.85
+dr pepper,1.60
+fries,1.85
+hamburger,2.40
+iced Tea,1.60
+lemonade,1.60
+milk,0.99
+root beer,1.60
+seven-up,1.60
+shake,2.45
