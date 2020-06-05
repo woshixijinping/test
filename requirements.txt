@@ -23,7 +23,7 @@ Cython==0.28.4
 dis3==0.1.2
 dj-database-url==0.5.0
 dj-static==0.0.6
-Django==1.11.16
+Django==1.11.29
 django-widget-tweaks==1.4.3
 docker==3.5.1
 docker-compose==1.21.2
